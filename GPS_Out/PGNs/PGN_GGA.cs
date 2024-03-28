@@ -64,7 +64,7 @@ namespace GPS_Out
             lat = Math.Abs(lat);
             cSentence += "," + ((int)lat).ToString("D2");
             double Mins = (double)(lat - (int)lat) * 60.0;
-            cSentence += Mins.ToString("N7");
+            cSentence += Mins.ToString("N7",CultureInfo.InvariantCulture);
             cSentence += NS;
 
             if (mf.UseRollCorrected)
@@ -80,20 +80,20 @@ namespace GPS_Out
             lon = Math.Abs(lon);
             cSentence += "," + ((int)lon).ToString("D3");
             Mins = (double)(lon - (int)lon) * 60.0;
-            cSentence += Mins.ToString("N7");
+            cSentence += Mins.ToString("N7").Replace(",", ".");
             cSentence += EW;
 
             cSentence += "," + mf.AGIOdata.FixQuality.ToString();
 
             cSentence += "," + mf.AGIOdata.Satellites.ToString("00");
 
-            cSentence += "," + mf.AGIOdata.HDOP.ToString("N1");
+            cSentence += "," + mf.AGIOdata.HDOP.ToString("N1", CultureInfo.InvariantCulture);
 
-            cSentence += "," + mf.AGIOdata.Altitude.ToString("N1") + ",M";
+            cSentence += "," + mf.AGIOdata.Altitude.ToString("N1", CultureInfo.InvariantCulture) + ",M";
 
             cSentence += ",0.0,M";
 
-            cSentence += "," + mf.AGIOdata.Age.ToString("N1") + ",";
+            cSentence += "," + mf.AGIOdata.Age.ToString("N1", CultureInfo.InvariantCulture) + ",";
 
             cSentence += ",*";
             string Hex = mf.CheckSum(cSentence).ToString("X2");

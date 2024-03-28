@@ -57,13 +57,49 @@ namespace GPS_Out
         { get { return (float)(cAgeX100 / 100.0); } }
 
         public float Altitude
-        { get { return cAltitude; } }
+        {
+            get
+            {
+                if (Connected())
+                {
+                    return cAltitude;
+                }
+                else
+                {
+                    return 732.0F;
+                }
+            }
+        }
 
         public byte FixQuality
-        { get { return cFixQuality; } }
+        {
+            get
+            {
+                if (Connected())
+                {
+                    return cFixQuality;
+                }
+                else
+                {
+                    return 8;
+                }
+            } 
+        }
 
         public float HDOP
-        { get { return (float)(cHdopX100 / 100.0); } }
+        {
+            get
+            {
+                if (Connected())
+                {
+                    return (float)(cHdopX100 / 100.0);
+                }
+                else
+                {
+                    return 7;
+                }
+            }
+        }
 
         public float Heading
         { get { return cHeading; } }
@@ -117,10 +153,33 @@ namespace GPS_Out
         { get { return cRoll; } }
 
         public UInt16 Satellites
-        { get { return cSatellites; } }
-
+        {
+            get
+            {
+                if (Connected())
+                {
+                    return cSatellites;
+                }
+                else
+                {
+                    return 12;
+                }
+            }
+        }
         public float Speed
-        { get { return cSpeed; } }
+        {
+            get
+            {
+                if (Connected())
+                {
+                    return cSpeed;
+                }
+                else
+                {
+                    return 4.8F;
+                }
+            }
+        }
 
         public bool Connected()
         {

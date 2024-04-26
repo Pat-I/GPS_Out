@@ -31,13 +31,14 @@ namespace GPS_Out.PGNs
         {
             mf = CalledFrom;
         }
+
         public string Sentence
         { get { return cSentence; } }
 
         public string Build()
         {
-            cSentence = "$GPZDA";
-            cSentence += "," + DateTime.UtcNow.ToString("HHmmss.fff", CultureInfo.InvariantCulture);
+            cSentence = mf.SenStart + "ZDA";
+            cSentence += "," + DateTime.UtcNow.ToString("HHmmss.ff", CultureInfo.InvariantCulture);
             cSentence += "," + DateTime.UtcNow.Day.ToString("00");
             cSentence += "," + DateTime.UtcNow.Month.ToString("00");
             cSentence += "," + DateTime.UtcNow.Year.ToString("0000");

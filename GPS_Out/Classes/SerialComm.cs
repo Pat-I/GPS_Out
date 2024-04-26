@@ -3,27 +3,21 @@ using System.IO.Ports;
 
 namespace GPS_Out
 {
-    public class SerialSend
+    public class SerialComm
     {
         private readonly frmStart mf;
         private SerialPort Sport;
-        private bool Successfull = false;
 
-        public SerialSend(frmStart CalledFrom)
+        public SerialComm(frmStart CalledFrom)
         {
             this.mf = CalledFrom;
-            Sport = new SerialPort("Com1", 57600);
+            Sport = new SerialPort(Properties.Settings.Default.Port, Properties.Settings.Default.Baud);
             Sport.WriteTimeout = 500;
             Sport.Parity = Parity.None;
             Sport.DataBits = 8;
             Sport.StopBits = StopBits.One;
 
-            LoadData();
-
-            if (bool.TryParse(mf.Tls.LoadProperty("AutoConnect"), out bool CN))
-            {
-                if (CN && Successfull) Open();
-            }
+            if (Properties.Settings.Default.AutoConnect && Properties.Settings.Default.SerialSuccessful) Open();
         }
 
         public int Baud
@@ -34,6 +28,7 @@ namespace GPS_Out
                 if (!Sport.IsOpen && value > 0 && value < 115201)
                 {
                     Sport.BaudRate = value;
+                    Properties.Settings.Default.Baud = Sport.BaudRate;
                 }
             }
         }
@@ -46,6 +41,7 @@ namespace GPS_Out
                 if (!Sport.IsOpen && value != "")
                 {
                     Sport.PortName = value;
+                    Properties.Settings.Default.Port = Sport.PortName;
                 }
             }
         }
@@ -55,11 +51,10 @@ namespace GPS_Out
             try
             {
                 if (Sport.IsOpen) Sport.Close();
-                SaveData();
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("SerialSend/CloseRCport: " + ex.Message);
+                mf.Tls.WriteErrorLog("SerialComm/CloseRCport: " + ex.Message);
             }
         }
 
@@ -86,9 +81,9 @@ namespace GPS_Out
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("SerialSend/OpenRCport: " + ex.Message);
+                mf.Tls.WriteErrorLog("SerialComm/OpenRCport: " + ex.Message);
             }
-            Successfull = Result;
+            Properties.Settings.Default.SerialSuccessful = Result;
             return Result;
         }
 
@@ -102,23 +97,9 @@ namespace GPS_Out
                 }
                 catch (Exception ex)
                 {
-                    mf.Tls.WriteErrorLog("SerialSend/SendStringData: " + ex.Message);
+                    mf.Tls.WriteErrorLog("SerialComm/SendStringData: " + ex.Message);
                 }
             }
-        }
-
-        private void LoadData()
-        {
-            PortNm = mf.Tls.LoadProperty("Serial_PortName");
-            if (int.TryParse(mf.Tls.LoadProperty("Serial_Baud"), out int PB)) Baud = PB;
-            if (bool.TryParse(mf.Tls.LoadProperty("Serial_Successful"), out bool tmp)) Successfull = true;
-        }
-
-        private void SaveData()
-        {
-            mf.Tls.SaveProperty("Serial_PortName", Sport.PortName);
-            mf.Tls.SaveProperty("Serial_Baud", Sport.BaudRate.ToString());
-            mf.Tls.SaveProperty("Serial_Successful", Successfull.ToString());
         }
 
         private bool SerialPortExists(string Name)

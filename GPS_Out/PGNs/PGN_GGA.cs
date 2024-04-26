@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 
 namespace GPS_Out
@@ -47,7 +46,7 @@ namespace GPS_Out
         {
             double lat;
             double lon;
-            if (mf.RollCorrected.Connected())
+            if (mf.RollCorrected.Connected() && Properties.Settings.Default.UseRollCorrected)
             {
                 lat = mf.RollCorrected.Latitude;
                 lon = mf.RollCorrected.Longitude;
@@ -58,7 +57,7 @@ namespace GPS_Out
                 lon = mf.AGIOdata.Longitude;
             }
 
-            cSentence = "$GPGGA";
+            cSentence = mf.SenStart + "GGA";
             cSentence += "," + DateTime.UtcNow.ToString("HHmmss.ff", CultureInfo.InvariantCulture);
 
             string NS = ",N";

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace GPS_Out
 {
@@ -28,7 +26,7 @@ namespace GPS_Out
 
         public string Build()
         {
-            cSentence = "$GPVTG";
+            cSentence = mf.SenStart + "VTG";
 
             cSentence += "," + mf.AGIOdata.Heading.ToString("000.0", CultureInfo.InvariantCulture) + ",T";
 

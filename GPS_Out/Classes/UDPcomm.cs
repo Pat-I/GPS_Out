@@ -48,7 +48,7 @@ namespace GPS_Out
                 {
                     data = value.Split('.');
                     cNetworkEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
-                    mf.Tls.SaveProperty("EndPoint_" + cConnectionName, value);
+                    Properties.Settings.Default["EndPoint" + cConnectionName] = cNetworkEP.ToString();
                     cSubNet = data[0].ToString() + "." + data[1].ToString() + "." + data[2].ToString();
                 }
             }
@@ -205,15 +205,7 @@ namespace GPS_Out
                 }
                 else
                 {
-                    string EP = mf.Tls.LoadProperty("EndPoint_" + cConnectionName);
-                    if (IPAddress.TryParse(EP, out _))
-                    {
-                        NetworkEP = EP;
-                    }
-                    else
-                    {
-                        NetworkEP = "192.168.1.255";
-                    }
+                    NetworkEP = (string)Properties.Settings.Default["EndPoint"+cConnectionName];
                 }
             }
             catch (Exception ex)

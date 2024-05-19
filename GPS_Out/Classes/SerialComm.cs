@@ -6,7 +6,10 @@ namespace GPS_Out
     public class SerialComm
     {
         private readonly frmStart mf;
+        private bool cWriteTimeOut = false;
         private SerialPort Sport;
+        private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
+        private int WriteErrorCount;
 
         public SerialComm(frmStart CalledFrom)
         {
@@ -16,6 +19,8 @@ namespace GPS_Out
             Sport.Parity = Parity.None;
             Sport.DataBits = 8;
             Sport.StopBits = StopBits.One;
+            Timer1.Interval = 1000;
+            Timer1.Tick += new EventHandler(CheckConnection);
 
             if (Properties.Settings.Default.AutoConnect && Properties.Settings.Default.SerialSuccessful) Open();
         }
@@ -50,6 +55,7 @@ namespace GPS_Out
         {
             try
             {
+                Timer1.Stop();
                 if (Sport.IsOpen) Sport.Close();
             }
             catch (Exception ex)
@@ -75,6 +81,8 @@ namespace GPS_Out
                     if (Sport.IsOpen)
                     {
                         Sport.DiscardOutBuffer();
+                        WriteErrorCount = 0;
+                        Timer1.Start();
                         Result = true;
                     }
                 }
@@ -94,11 +102,29 @@ namespace GPS_Out
                 try
                 {
                     Sport.WriteLine(data + "\r\n");
+                    cWriteTimeOut = false;
                 }
                 catch (Exception ex)
                 {
+                    if (ex is TimeoutException) cWriteTimeOut = true;
                     mf.Tls.WriteErrorLog("SerialComm/SendStringData: " + ex.Message);
                 }
+            }
+        }
+
+        private void CheckConnection(object myObject, EventArgs myEventArgs)
+        {
+            if (cWriteTimeOut)
+            {
+                if (++WriteErrorCount > 2)
+                {
+                    mf.Tls.ShowHelp("Serial Port is not sending correctly. It will be closed.", "Serial Port", 5000, true, false, true);
+                    Close();
+                }
+            }
+            else
+            {
+                WriteErrorCount = 0;
             }
         }
 

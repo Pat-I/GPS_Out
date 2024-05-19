@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace GPS_Out
 {
@@ -121,6 +122,7 @@ namespace GPS_Out
                     Result = cImuHeading;
                     cHeadingType = "I";
                 }
+                Debug.Print(cHeading.ToString("N1"));
 
                 return Result;
             }

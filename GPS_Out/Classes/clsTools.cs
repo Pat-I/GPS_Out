@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Windows.Forms;
@@ -419,7 +420,7 @@ namespace GPS_Out
         }
 
         public void ShowHelp(string Message, string Title = "Help",
-            int timeInMsec = 30000, bool LogError = false, bool Modal = false)
+            int timeInMsec = 30000, bool LogError = false, bool Modal = false, bool PlayErrorSound = false)
         {
             var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
             if (Modal)
@@ -432,6 +433,7 @@ namespace GPS_Out
             }
 
             if (LogError) WriteErrorLog(Message);
+            if (PlayErrorSound) SystemSounds.Exclamation.Play();
         }
 
         public void StartWifi()

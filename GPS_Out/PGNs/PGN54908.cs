@@ -278,7 +278,10 @@ namespace GPS_Out
                 cLatitude = BitConverter.ToDouble(Data, 13);
                 cHeadingDual = BitConverter.ToSingle(Data, 21);
                 cHeading = BitConverter.ToSingle(Data, 25);
-                cSpeed = BitConverter.ToSingle(Data, 29);
+
+                float NewSpeed = BitConverter.ToSingle(Data, 29);
+                cSpeed = (float)((cSpeed * 0.75) + (NewSpeed * 0.25));
+
                 cRoll = BitConverter.ToSingle(Data, 33);
                 cAltitude = BitConverter.ToSingle(Data, 37);
                 cSatellites = BitConverter.ToUInt16(Data, 41);

@@ -540,13 +540,13 @@ namespace GPS_Out
             {
                 if (RollCorrected.Connected())
                 {
-                    lbLon.Text = RollCorrected.Longitude.ToString("N7");
-                    lbLat.Text = RollCorrected.Latitude.ToString("N7");
+                    lbLon.Text = RollCorrected.Longitude.ToString("N6");
+                    lbLat.Text = RollCorrected.Latitude.ToString("N6");
                 }
                 else
                 {
-                    lbLon.Text = AGIOdata.Longitude.ToString("N7");
-                    lbLat.Text = AGIOdata.Latitude.ToString("N7");
+                    lbLon.Text = AGIOdata.Longitude.ToString("N6");
+                    lbLat.Text = AGIOdata.Latitude.ToString("N6");
                 }
 
                 lbAge.Text = AGIOdata.Age.ToString("N2");
